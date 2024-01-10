@@ -10,7 +10,7 @@ def get_otx_api_key():
     return '1bde41f792266a0e4dc7e3c4d22e6e6b61b2801d10d5e453b5ce816ebfb92647'
 
 def get_ip_analysis(ip_address, api_key):
-    url = f'https://otx.alienvault.com/api/v1/indicators/IPv4/{ip_address}/http_scans'
+    url = f'https://otx.alienvault.com/api/v1/indicators/IPv4/{ip_address}/reputation'
     headers = {
         'Content-Type': 'application/json',
         'X-OTX-API-KEY': api_key
