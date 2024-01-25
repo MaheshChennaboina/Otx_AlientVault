@@ -7,7 +7,7 @@ import pandas as pd
 
 def get_otx_api_key():
     # Replace 'YOUR_OTX_API_KEY' with your actual OTX API key
-    return '1bde41f792266a0e4dc7e3c4d22e6e6b61b2801d10d5e453b5ce816ebfb92647'
+    return 'Your_API_key'
 
 def get_ip_analysis(ip_address, api_key):
     url = f'https://otx.alienvault.com/api/v1/indicators/IPv4/{ip_address}/reputation'
