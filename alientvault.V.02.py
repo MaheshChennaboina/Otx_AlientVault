@@ -1,7 +1,3 @@
-#Date 10.1.2023 and Time 2:38
-#First Attempt.....
-
-
 import requests
 import pandas as pd
 
