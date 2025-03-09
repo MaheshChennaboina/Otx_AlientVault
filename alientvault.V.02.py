@@ -135,6 +135,25 @@ output_file = "validated_emails.xlsx"  # Output file with validation results
 process_excel(input_file, output_file)
 
 
+27rsewnath@tenafly.k12.nj.us
+aanderson@glytec-systems.com
+aandriopulos@sherpadigitalmedia.com
+aanglace@completestaffingsolutions.com
+aaron.m@focuscares.com
+aaron@atlanticstss.com
+abby.parker@selectyourdata.com
+abel.x.sanchez@questdiagnostics.com
+aberger@pensionbridge-email.com
+abhijeet.gaikwad@automationedge.com
+abigail.c.baeza@rrd.com
+abigail@midlevelu.com
+abishop@pods.com
+abrava@merraine.com
+abush@elasticroi.com
+academy@alchemysystems.com
+achisholm@boma.org
+aclements@powerofcleanenergy.com
+acorter1@newcourtland.org
 
 
 
