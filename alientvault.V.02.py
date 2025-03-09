@@ -51,3 +51,92 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+import re
+import dns.resolver
+import smtplib
+import pandas as pd
+
+def is_valid_syntax(email):
+    """Check if the email has a valid syntax."""
+    pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+    return re.match(pattern, email) is not None
+
+def get_mx_record(domain):
+    """Get the MX record of the domain."""
+    try:
+        records = dns.resolver.resolve(domain, 'MX')
+        mx_record = str(records[0].exchange).strip('.')
+        return mx_record
+    except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN, dns.exception.Timeout):
+        return None
+
+def verify_email_smtp(email, mx_record):
+    """Verify the email address using SMTP connection."""
+    try:
+        server = smtplib.SMTP(mx_record, 25, timeout=5)
+        server.helo()
+        server.mail("check@example.com")  # Dummy sender email
+        code, _ = server.rcpt(email)
+        server.quit()
+        return code == 250  # 250 means email exists
+    except Exception:
+        return False
+
+def get_mail_provider(mx_record):
+    """Extract mail provider from MX record dynamically."""
+    if not mx_record:
+        return "Unknown"
+
+    mx_parts = mx_record.split('.')
+    if len(mx_parts) > 2:
+        return mx_parts[-2] + '.' + mx_parts[-1]  # Extract main domain part
+    return mx_record
+
+def validate_email(email):
+    """Complete email validation process."""
+    if not is_valid_syntax(email):
+        return {"Deliverable": "No", "Valid Email": "No", "MX Provider": "Invalid", "Domain": "Invalid"}
+
+    domain = email.split('@')[1]
+    mx_record = get_mx_record(domain)
+    
+    if not mx_record:
+        return {"Deliverable": "No", "Valid Email": "No", "MX Provider": "Not Found", "Domain": domain}
+
+    is_valid = verify_email_smtp(email, mx_record)
+    return {
+        "Deliverable": "Yes" if is_valid else "No",
+        "Valid Email": "Yes" if is_valid else "No",
+        "MX Provider": get_mail_provider(mx_record),
+        "Domain": domain
+    }
+
+def process_excel(input_file, output_file):
+    """Reads emails from an Excel file, validates them, and writes results to a new Excel file."""
+    df = pd.read_excel(input_file)
+
+    if 'Email' not in df.columns:
+        print("Error: The input Excel file must contain a column named 'Email'")
+        return
+
+    results = df['Email'].apply(validate_email)
+    results_df = pd.DataFrame(results.tolist())
+
+    final_df = pd.concat([df, results_df], axis=1)
+    final_df.to_excel(output_file, index=False)
+
+    print(f"✅ Validation completed! Results saved in: {output_file}")
+
+# Input and Output Excel file paths
+input_file = "emails.xlsx"   # Input file with a column named 'Email'
+output_file = "validated_emails.xlsx"  # Output file with validation results
+
+process_excel(input_file, output_file)
+
+
+
+
+
+
+
